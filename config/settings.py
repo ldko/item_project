@@ -10,28 +10,30 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
-import json, logging, os
+import json
+import logging
+import os
 import pathlib
 from dotenv import load_dotenv, find_dotenv
 
 
-## load envars ------------------------------------------------------
+# load envars ------------------------------------------------------
 dotenv_path = pathlib.Path(__file__).resolve().parent.parent.parent / '.env'
 assert dotenv_path.exists(), f'file does not exist, ``{dotenv_path}``'
-load_dotenv( 
-    find_dotenv( str(dotenv_path), raise_error_if_not_found=True ), 
-    override=True 
+load_dotenv(
+    find_dotenv(str(dotenv_path), raise_error_if_not_found=True),
+    override=True
     )
 
 
 log = logging.getLogger(__name__)
 
 
-## django project settings ------------------------------------------
+# django project settings ------------------------------------------
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = pathlib.Path(__file__).resolve().parent.parent
-# log.debug( f'BASE_DIR, ``{BASE_DIR}``' )
+# log.debug(f'BASE_DIR, ``{BASE_DIR}``')
 
 
 # Quick-start development settings - unsuitable for production
@@ -39,16 +41,16 @@ BASE_DIR = pathlib.Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
 # SECRET_KEY = 'django-insecure-3ory+ty87_wq8-21ki6d&a+x=z9_$2m(gr4@vxri@@^g7u!*oc'
-SECRET_KEY = os.environ[ 'SECRET_KEY' ]
+SECRET_KEY = os.environ['SECRET_KEY']
 
 # SECURITY WARNING: don't run with debug turned on in production!
 # DEBUG = True
-DEBUG = json.loads( os.environ['DEBUG_JSON'] )
+DEBUG = json.loads(os.environ['DEBUG_JSON'])
 
-ADMINS = json.loads( os.environ['ADMINS_JSON'] )
+ADMINS = json.loads(os.environ['ADMINS_JSON'])
 
-ALLOWED_HOSTS = json.loads( os.environ['ALLOWED_HOSTS_JSON'] )
-CSRF_TRUSTED_ORIGINS = json.loads( os.environ['CSRF_TRUSTED_ORIGINS_JSON'] )    
+ALLOWED_HOSTS = json.loads(os.environ['ALLOWED_HOSTS_JSON'])
+CSRF_TRUSTED_ORIGINS = json.loads(os.environ['CSRF_TRUSTED_ORIGINS_JSON'])
 
 # Application definition
 
@@ -76,8 +78,8 @@ ROOT_URLCONF = 'config.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        # 'DIRS': [ '%s/item_app' % BASE_DIR ],
-        'DIRS': [ f'{BASE_DIR}/item_app/item_app_templates' ],
+        # 'DIRS': ['%s/item_app' % BASE_DIR],
+        'DIRS': [f'{BASE_DIR}/item_app/item_app_templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -95,7 +97,7 @@ WSGI_APPLICATION = 'config.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
-DATABASES = json.loads( os.environ['DATABASES_JSON'] )
+DATABASES = json.loads(os.environ['DATABASES_JSON'])
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
@@ -121,12 +123,12 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-# TIME_ZONE = 'UTC'  ## the default
+# TIME_ZONE = 'UTC'  # the default
 TIME_ZONE = 'America/New_York'
 
 USE_I18N = True
 
-# USE_TZ = True  ## the default
+# USE_TZ = True  # the default
 USE_TZ = False
 
 
@@ -139,7 +141,7 @@ STATIC_ROOT = os.environ['STATIC_ROOT']  # needed for collectstatic command
 # Email
 SERVER_EMAIL = os.environ['SERVER_EMAIL']
 EMAIL_HOST = os.environ['EMAIL_HOST']
-EMAIL_PORT = int( os.environ['EMAIL_PORT'] )
+EMAIL_PORT = int(os.environ['EMAIL_PORT'])
 
 
 # Default primary key field type
@@ -163,14 +165,14 @@ LOGGING = {
             'include_html': True,
         },
         'logfile': {
-            'level':'DEBUG',
-            'class':'logging.FileHandler',  # note: configure server to use system's log-rotate to avoid permissions issues
+            'level': 'DEBUG',
+            'class': 'logging.FileHandler',  # note: configure server to use system's log-rotate to avoid permissions issues
             'filename': os.environ['LOG_PATH'],
             'formatter': 'standard',
         },
-        'console':{
-            'level':'DEBUG',
-            'class':'logging.StreamHandler',
+        'console': {
+            'level': 'DEBUG',
+            'class': 'logging.StreamHandler',
             'formatter': 'standard'
         },
     },
