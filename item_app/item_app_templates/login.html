@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block header %}
+    <title>Sign in</title>
+    <meta name="description" content="Sign in to your account.">
+
+{% endblock %}
+
+{% block content %}
+<h2>Sign in to save your BDR Favorites!</h2>
+   <form method="post">
+       {% csrf_token %}
+       {% for field in form %}
+            <p>
+                {{ field.label_tag }}<br>
+                {{ field }}
+            </p>
+        {% endfor %}
+        <button type="submit">Submit</button>
+    </form>
+
+    <p>Need an account? <a href="{% url 'register_url' %}">Register</a>.</p>
+{% endblock %}

@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+{% block header %}
+<title>{{ user.get_username }}'s Items</title>
+    <meta name="description" content="Favorite items.">
+{% endblock %}
+{% block content %}
+        <h1>{{ user.get_username }}</h1>
+        <h1>{{ items }}</h1>
+        <p class="parenthetical">(Add "?format=json" to this url to see the data sent to the page.)</p>
+	<p><a href="{% url 'logout_url' %}">Log out</a></p>
+{% endblock %}
