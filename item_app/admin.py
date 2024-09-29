@@ -1,3 +1,14 @@
 from django.contrib import admin
 
-# Register your models here.
+from item_app.models import Item, Favorite, Tag
+
+
+@admin.register(Item)
+class ItemAdmin(admin.ModelAdmin):
+    list_display = ['bdr_id', 'title', 'uri']
+
+@admin.register(Favorite)
+class FavoriteAdmin(admin.ModelAdmin):
+    list_display = ['user', 'bdr_id', 'access']
+
+admin.site.register(Tag)
