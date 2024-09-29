@@ -10,8 +10,9 @@ from django.http import HttpResponse, HttpResponseNotFound, HttpResponseRedirect
 from django.shortcuts import redirect, render
 from django.urls import reverse
 
-from item_app.forms import RegistrationForm
-from item_app.lib import version_helper
+from item_app.forms import RegistrationForm, FavoriteForm
+from item_app.models import Item, Favorite, Tag
+from item_app.lib import version_helper, bdr_client
 from item_app.lib.version_helper import GatherCommitAndBranchData
 
 
@@ -92,14 +93,13 @@ def register(request):
         form = RegistrationForm(request.POST)
         if form.is_valid():
             user = form.save()
-            user.refresh_from_db()
             user.save()
             password = form.cleaned_data.get('password1')
             # Log the user, so they are ready to go
             user = authenticate(request, username=user.username, password=password)
             if user is not None:
                 login(request, user)
-                return redirect('info_url')
+                return redirect('home_url')
             else:
                 # Return an 'invalid login' error message.
                 return 'error'
@@ -111,10 +111,18 @@ def register(request):
 @login_required
 def home(request):
     """Displays a users home page."""
+    if request.method == 'POST':
+        form = FavoriteForm(request.POST)
+        if form.is_valid():
+            item, created = Item.objects.get_or_create(bdr_id=form.cleaned_data['bdr_id'])
+    else:
+        form = FavoriteForm(initial={'access': Favorite.PUBLIC})
     context = {
         'items': ['place holder'],
+        'form': form
     }
     if request.GET.get('format', '') == 'json':
+        form = str(form)
         resp = HttpResponse(json.dumps(context, sort_keys=True, indent=2),
                             content_type='application/json; charset=utf-8')
     else:

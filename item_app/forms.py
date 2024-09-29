@@ -12,8 +12,8 @@ class RegistrationForm(UserCreationForm):
 
 
 class FavoriteForm(forms.Form):
-    email = forms.EmailField()
-    bdr_id = forms.CharField(max_length=12)
+    bdr_id = forms.CharField(max_length=12, label='BDR ID', help_text='Add the id of an item from BDR')
     access = forms.ChoiceField(required=True,
                                choices=Favorite.ACCESS_CHOICES,
-                               widget=forms.RadioSelect(attrs={'name': 'access-value'}))
+                               help_text='')
+    notes = forms.CharField(widget=forms.Textarea)
