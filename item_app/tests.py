@@ -12,7 +12,7 @@ from item_app.forms import FavoriteForm
 log = logging.getLogger(__name__)
 TestCase.maxDiff = 1000
 
-BDR_API_DATA = {'primary title': 'Picture of Person',
+BDR_API_DATA = {'mods_title_full_primary_tsi': 'Picture of Person',
                 'abstract': ['A picture of a person in a library'],
                 'thumbnail': 'https://example.com/thumbnail',
                 'uri': 'https://example.com/bdr:1234'}
@@ -81,3 +81,4 @@ class HomeTest(TestCase):
         self.assertEqual(self.user, favorites.user)
         self.assertEqual(access, favorites.access)
         self.assertEqual(notes, favorites.notes)
+        self.assertIn(BDR_API_DATA['mods_title_full_primary_tsi'], response.content.decode())

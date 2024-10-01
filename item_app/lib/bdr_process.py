@@ -59,7 +59,7 @@ class BDR_Favorite:
             return {'error': err}
         response_json = response.json()
         item_data = {
-            'title': response_json.get('primary_title', ''),
+            'title': response_json.get('mods_title_full_primary_tsi', ''),
             'description': response_json.get('abstract', [''])[0],
             'thumbnail': response_json.get('thumbnail', ''),
             'uri': response_json.get('uri', '')
