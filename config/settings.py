@@ -198,3 +198,5 @@ LOGGING = {
 
 LOGIN_REDIRECT_URL = 'home_url'
 LOGIN_URL = 'login_url'
+
+BDR_BASE_URI = 'https://repository.library.brown.edu/api'
