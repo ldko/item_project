@@ -4,7 +4,7 @@
     <meta name="description" content="Detailed information about {{ topic }}.">
 {% endblock %}
 {% block content %}
-        <h1>“{{ quote }}”</h1>
-        <h1>— {{ author }}</h1>
+        <h1>{{ about_text }}</h1>
+        <p><a href="{% url 'home_url' %}">Start saving your favorites.</a></p>
         <p class="parenthetical">(Add "?format=json" to this url to see the data sent to the page.)</p>
 {% endblock %}

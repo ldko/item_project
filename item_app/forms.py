@@ -12,8 +12,9 @@ class RegistrationForm(UserCreationForm):
 
 
 class FavoriteForm(forms.Form):
-    bdr_id = forms.CharField(max_length=12, label='BDR ID', help_text='Add the id of an item from BDR')
+    bdr_id = forms.CharField(max_length=12, label='BDR ID',
+                             help_text='Add the id of an item from BDR')
     access = forms.ChoiceField(required=True,
                                choices=Favorite.ACCESS_CHOICES,
                                help_text='')
-    notes = forms.CharField(widget=forms.Textarea)
+    notes = forms.CharField(widget=forms.Textarea, required=False)

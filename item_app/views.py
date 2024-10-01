@@ -6,13 +6,14 @@ import trio
 from django.conf import settings as project_settings
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
+from django.core import serializers
 from django.http import HttpResponse, HttpResponseNotFound, HttpResponseRedirect
 from django.shortcuts import redirect, render
 from django.urls import reverse
 
 from item_app.forms import RegistrationForm, FavoriteForm
-from item_app.models import Item, Favorite, Tag
-from item_app.lib import version_helper, bdr_client
+from item_app.models import Favorite
+from item_app.lib import version_helper, bdr_process
 from item_app.lib.version_helper import GatherCommitAndBranchData
 
 
@@ -27,15 +28,12 @@ log = logging.getLogger(__name__)
 def info(request):
     """The "about" view.
 
-    Can get here from 'info' url, and the root-url redirects here.
+    Can get here from 'info' url.
     """
     log.debug('starting info()')
     # prep data ----------------------------------------------------
-    # context = { 'message': 'Hello, world.' }
     context = {
-        'quote': ('The best life is the one in which the creative impulses play the '
-                  'largest part and the possessive impulses the smallest.'),
-        'author': 'Bertrand Russell'}
+        'about_text': ('This app lets you save and annotate BDR items.')}
     # prep response ------------------------------------------------
     if request.GET.get('format', '') == 'json':
         log.debug('building json response')
@@ -84,7 +82,10 @@ def version(request):
 
 
 def root(request):
-    return HttpResponseRedirect(reverse('info_url'))
+    if request.user.is_authenticated:
+        return HttpResponseRedirect(reverse('home_url'))
+    else:
+        return HttpResponseRedirect(reverse('login_url'))
 
 
 def register(request):
@@ -114,15 +115,22 @@ def home(request):
     if request.method == 'POST':
         form = FavoriteForm(request.POST)
         if form.is_valid():
-            item, created = Item.objects.get_or_create(bdr_id=form.cleaned_data['bdr_id'])
-    else:
-        form = FavoriteForm(initial={'access': Favorite.PUBLIC})
+            bdr_id = form.cleaned_data['bdr_id']
+            bdr_favorite = bdr_process.BDR_Favorite(bdr_id,
+                                                    request.user,
+                                                    form.cleaned_data['access'],
+                                                    form.cleaned_data['notes'])
+    form = FavoriteForm(initial={'access': Favorite.PUBLIC})
+    favorites = Favorite.objects.filter(user=request.user)
     context = {
-        'items': ['place holder'],
+        'favorites': favorites,
         'form': form
     }
     if request.GET.get('format', '') == 'json':
-        form = str(form)
+        context = {
+            'favorites': serializers.serialize('json', favorites),
+            'form': str(form)
+        }
         resp = HttpResponse(json.dumps(context, sort_keys=True, indent=2),
                             content_type='application/json; charset=utf-8')
     else:

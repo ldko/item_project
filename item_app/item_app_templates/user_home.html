@@ -5,7 +5,7 @@
     <meta name="description" content="Favorite items.">
 {% endblock %}
 {% block content %}
-   <h1>Save a BDR Favorite</h1>
+   <h1 style="color: #c00404;">Save a BDR Favorite</h1>
    <form method="post">
        {% csrf_token %}
        {% for field in form %}
@@ -20,12 +20,33 @@
                 {% endfor %}
             </p>
         {% endfor %}
-        <button type="submit">Submit</button>
+        <button type="submit">Save</button>
     </form>
-    <h1>Favorite Items</h1>
-    <div>
-	{{ items }}
-    </div>
+    <h1 style="color: #c00404;">Favorite Items</h1>
+    {% for favorite in favorites %}
+        <div class="favorite">
+            <a href="{{ favorite.item.uri }}" target="_blank"><img src='{{ favorite.item.thumbnail }}'></a>
+            <p>
+                <b>Title:</b> {{ favorite.item.title }}
+            </p>
+            <p>
+                <b>BDR ID:</b> <a href="{{ favorite.item.uri }}" target="_blank">{{ favorite.item.bdr_id }}</a>
+            </p>
+            <p>
+                <b>Description:</b> {{ favorite.item.description }}
+            </p>
+            <p>
+                <b>Access:</b> {{ favorite.access }}
+            </p>
+            <p>
+                <b>Date Favorited:</b> {{ favorite.added }}
+            </p>
+            <p>
+                <b>Notes:</b> {{ favorite.notes }}
+            </p>
+        </div>
+        <br>
+    {% endfor %}
     <p class="parenthetical">(Add "?format=json" to this url to see the data sent to the page.)</p>
     <p><a href="{% url 'logout_url' %}">Log out</a></p>
 {% endblock %}

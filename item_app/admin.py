@@ -7,8 +7,10 @@ from item_app.models import Item, Favorite, Tag
 class ItemAdmin(admin.ModelAdmin):
     list_display = ['bdr_id', 'title', 'uri']
 
+
 @admin.register(Favorite)
 class FavoriteAdmin(admin.ModelAdmin):
-    list_display = ['user', 'bdr_id', 'access']
+    list_display = ['user', 'item', 'access']
+
 
 admin.site.register(Tag)
