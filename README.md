@@ -30,7 +30,9 @@ $ source ../venv/bin/activate
 (venv) $ pip install pip-tools
 (venv) $ pip-compile ./config/requirements/requirements_base.in
 (venv) $ pip install -r ./config/requirements/requirements_base.txt
-(venv) $ python ./manage.py runserver
+(venv) $ python3 ./manage.py makemigrations item_app
+(venv) $ python3 ./manage.py migrate
+(venv) $ python3 ./manage.py runserver
 ```
 
 ---
