@@ -1,14 +1,14 @@
 {% extends 'base.html' %}
 
 {% block header %}
-<title>{{ user.get_username }}'s Items</title>
+    <title>{{ user.get_username }}'s Items</title>
     <meta name="description" content="Favorite items.">
 {% endblock %}
 {% block content %}
-   <h1 style="color: #c00404;">Save a BDR Favorite</h1>
-   <form method="post">
-       {% csrf_token %}
-       {% for field in form %}
+    <h1 style="color: #c00404;">Save a <a href="https://repository.library.brown.edu/studio/"  target="_blank">BDR</a> Favorite</h1>
+    <form method="post">
+        {% csrf_token %}
+        {% for field in form %}
             <p>
                 {{ field.label_tag }}<br>
                 {{ field }}
