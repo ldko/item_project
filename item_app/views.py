@@ -6,13 +6,12 @@ import trio
 from django.conf import settings as project_settings
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
-from django.core import serializers
 from django.http import HttpResponse, HttpResponseNotFound, HttpResponseRedirect
 from django.shortcuts import redirect, render
 from django.urls import reverse
 
 from item_app.forms import RegistrationForm, FavoriteForm
-from item_app.models import Favorite
+from item_app.models import Favorite, Item
 from item_app.lib import version_helper, bdr_process
 from item_app.lib.version_helper import GatherCommitAndBranchData
 
@@ -127,12 +126,15 @@ def home(request):
         'form': form
     }
     if request.GET.get('format', '') == 'json':
-        context = {
-            'favorites': serializers.serialize('json', favorites),
-            'form': str(form)
-        }
-        resp = HttpResponse(json.dumps(context, sort_keys=True, indent=2),
+        resp = HttpResponse(json.dumps(list(favorites.values('item', 'added', 'access', 'notes')),
+                                       default=str),
                             content_type='application/json; charset=utf-8')
     else:
         resp = render(request, 'user_home.html', context)
     return resp
+
+
+def items_api(request):
+    """Displays all items that have been favorited in the system."""
+    items = list(Item.objects.all().values())
+    return HttpResponse(json.dumps(items), content_type='application/json; charset=utf-8')

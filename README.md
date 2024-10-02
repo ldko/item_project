@@ -45,6 +45,12 @@ $ source ../venv/bin/activate
 
 - To favorite an item from BDR, enter the BDR identifier, choose to make it public or private, and optionally, add some notes.
 
+# API
+
+- Retrieve all items that have been favorited in the system: <http://127.0.0.1:8000/api/items/>
+
+- An authenticated user can retrieve their favorite items: <http://127.0.0.1:8000/home/?format=json>
+
 # Testing
 - Run tests via `(venv) $ python ./manage.py test`.
 
