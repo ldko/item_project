@@ -13,6 +13,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('error_check/', views.error_check, name='error_check_url'),
     path('home/', views.home, name='home_url'),
+    path('api/items/<bdr_id>/', views.item_api, name='item_api_url'),
     path('api/items/', views.items_api, name='items_api_url'),
     path('login/', auth_views.LoginView.as_view(template_name='login.html'), name='login_url'),
     path('logout/', auth_views.LogoutView.as_view(template_name='logout.html'), name='logout_url'),

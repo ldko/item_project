@@ -6,6 +6,7 @@ import trio
 from django.conf import settings as project_settings
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
+from django.db.models import Count
 from django.http import HttpResponse, HttpResponseNotFound, HttpResponseRedirect
 from django.shortcuts import redirect, render
 from django.urls import reverse
@@ -126,8 +127,8 @@ def home(request):
         'form': form
     }
     if request.GET.get('format', '') == 'json':
-        resp = HttpResponse(json.dumps(list(favorites.values('item', 'added', 'access', 'notes')),
-                                       default=str),
+        favorites_list = list(favorites.values('item', 'added', 'access', 'notes'))
+        resp = HttpResponse(json.dumps(favorites_list, default=str),
                             content_type='application/json; charset=utf-8')
     else:
         resp = render(request, 'user_home.html', context)
@@ -136,5 +137,31 @@ def home(request):
 
 def items_api(request):
     """Displays all items that have been favorited in the system."""
-    items = list(Item.objects.all().values())
+    items = list(Item.objects.annotate(favorite_count=Count('favorite')).values())
+    for item in items:
+        item['item_json_uri'] = request.build_absolute_uri(reverse('item_api_url',
+                                                           args=[item['bdr_id']]))
     return HttpResponse(json.dumps(items), content_type='application/json; charset=utf-8')
+
+
+def item_api(request, bdr_id):
+    """Displays information about an individual item in the system.
+
+    Includes number of times the item has been favorited.
+    """
+    try:
+        item = Item.objects.get(bdr_id=bdr_id)
+    except Item.DoesNotExist:
+        return HttpResponse(json.dumps({'error': f'Item {bdr_id} does not exist'}),
+                            content_type='application/json; charset=utf-8',
+                            status=404)
+    favorite_count = Favorite.objects.filter(item=item).count()
+    item_data = {'bdr_id': item.bdr_id,
+                 'title': item.title,
+                 'description': item.description,
+                 'thumbnail': item.thumbnail,
+                 'uri': item.uri,
+                 'item_json_uri': request.build_absolute_uri(reverse('item_api_url',
+                                                             args=[item.bdr_id])),
+                 'favorite_count': favorite_count}
+    return HttpResponse(json.dumps(item_data), content_type='application/json; charset=utf-8')

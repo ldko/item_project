@@ -49,6 +49,9 @@ $ source ../venv/bin/activate
 
 - Retrieve all items that have been favorited in the system: <http://127.0.0.1:8000/api/items/>
 
+- Retrieve data about a single item that has been favorited in the system: <http://127.0.0.1:8000/api/items/[ bdr id ]/>
+  - example: <http://127.0.0.1:8000/api/items/bdr:16423/>
+
 - An authenticated user can retrieve their favorite items: <http://127.0.0.1:8000/home/?format=json>
 
 # Testing
